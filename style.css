@@ -9,6 +9,7 @@
     --border-color: #E0E0E0;
     --success-color: #2E7D32;
     --warning-color: #ED6C02;
+    --danger-color: #D32F2F;
     --header-bg: #1C1C1C;
     /* Flexjet Dark Brown/Black */
     --header-text: #FFFFFF;
@@ -61,7 +62,7 @@ header h1 {
     /* Ensure everything stays centered */
 }
 
-/* NEW: Groups the two inputs together */
+/* Groups the two inputs together */
 .input-group {
     display: flex;
     flex-direction: column;
@@ -250,13 +251,31 @@ input:checked+.slider:before {
     align-items: center;
 }
 
+/* Urgency Colors */
 .time-until-departure {
     font-size: 1rem;
     font-weight: 800;
-    color: var(--success-color);
-    background: rgba(46, 125, 50, 0.1);
     padding: 4px 8px;
     border-radius: 4px;
+    background: rgba(0, 0, 0, 0.05);
+    /* Default light grey bg */
+    color: var(--text-primary);
+    /* Default black text */
+}
+
+.urgency-high {
+    color: var(--danger-color);
+    background: rgba(211, 47, 47, 0.1);
+}
+
+.urgency-medium {
+    color: var(--warning-color);
+    background: rgba(237, 108, 2, 0.1);
+}
+
+.urgency-low {
+    color: var(--success-color);
+    background: rgba(46, 125, 50, 0.1);
 }
 
 .flight-meta {
