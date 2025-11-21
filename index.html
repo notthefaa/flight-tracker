@@ -34,13 +34,18 @@
         <header>
             <h1>LXJ Flight Tracker</h1>
             <div class="controls">
-                <div class="search-box">
-                    <input type="text" id="airportFilter" placeholder="Filter by Departure (e.g. KTEB)">
+                
+                <!-- NEW Wrapper: Holds the two inputs together -->
+                <div class="input-group">
+                    <div class="search-box">
+                        <input type="text" id="airportFilter" placeholder="Filter by Departure (e.g. KTEB)">
+                    </div>
+                    <div class="search-box">
+                        <input type="text" id="homeBaseInput" placeholder="Set Home Base (e.g. KDAL)">
+                    </div>
                 </div>
-                <!-- NEW: Home Base Input -->
-                <div class="search-box">
-                    <input type="text" id="homeBaseInput" placeholder="Set Home Base (e.g. KDAL)">
-                </div>
+
+                <!-- Buttons stay below and centered -->
                 <div class="toggle-group">
                     <div class="toggle-container">
                         <span>Nearby (50mi)</span>
