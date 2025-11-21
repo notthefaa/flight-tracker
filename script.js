@@ -9,7 +9,9 @@ const state = {
     userLocation: null,
     nearbyAirportCodes: new Set(), // Store codes of nearby airports
     nextPageLink: null,
-    isFetchingBackground: false
+    isFetchingBackground: false,
+    homeBase: localStorage.getItem('lxj_home_base') || '',
+    homeNearbySet: new Set() // Airports within 50mi of Home Base
 };
 
 // DOM Elements
@@ -20,11 +22,21 @@ const flightListEl = document.getElementById('flightList');
 const nearbyToggle = document.getElementById('nearbyToggle');
 const airportFilter = document.getElementById('airportFilter');
 const refreshBtn = document.getElementById('refreshBtn');
+const homeBaseInput = document.getElementById('homeBaseInput');
+
+// Set initial value for home base if saved
+if (state.homeBase) {
+    homeBaseInput.value = state.homeBase;
+}
 
 // Event Listeners
-startSearchBtn.addEventListener('click', () => {
+startSearchBtn.addEventListener('click', async () => {
     welcomePage.style.display = 'none';
     app.style.display = 'block';
+
+    // Load data immediately so highlighting works
+    loadAirportData().then(() => updateHomeBaseZone());
+
     fetchFlights();
 });
 
@@ -44,6 +56,16 @@ nearbyToggle.addEventListener('change', async (e) => {
 airportFilter.addEventListener('input', (e) => {
     state.filterOrigin = e.target.value;
     render();
+});
+
+homeBaseInput.addEventListener('input', (e) => {
+    state.homeBase = e.target.value.trim().toUpperCase();
+    localStorage.setItem('lxj_home_base', state.homeBase);
+
+    // Recalculate zone, then render
+    updateHomeBaseZone().then(() => {
+        render();
+    });
 });
 
 // Helpers
@@ -200,7 +222,37 @@ async function findNearbyAirportsFromCSV(lat, lon) {
     console.log(`Found ${nearby.length} nearby airports.`);
 }
 
-// Fetch Flights
+// Calculate Home Base Zone (Airports within 50mi of Home)
+async function updateHomeBaseZone() {
+    state.homeNearbySet.clear();
+    
+    const homeCode = state.homeBase.trim().toUpperCase();
+    if (!homeCode) return;
+
+    // Ensure data is loaded
+    await loadAirportData(); 
+
+    // 1. Find the Home Airport object to get its Lat/Lon
+    const homeAirport = airportData.find(a => a.code === homeCode);
+    
+    if (!homeAirport) {
+        console.log("Home airport not found in database.");
+        return;
+    }
+
+    // 2. Find all airports within 50 miles of Home
+    const RADIUS = 50; 
+    for (const airport of airportData) {
+        // We include the home airport itself in this check (distance 0)
+        if (calculateDistance(homeAirport.lat, homeAirport.lon, airport.lat, airport.lon) <= RADIUS) {
+            state.homeNearbySet.add(airport.code);
+        }
+    }
+    
+    console.log(`Home Base is ${homeCode}. Found ${state.homeNearbySet.size} nearby airports.`);
+}
+
+
 // Fetch Flights
 async function fetchFlights(isBackground = false) {
     if (!isBackground) {
@@ -345,8 +397,25 @@ function renderFlightCard(flight) {
     const timeUntil = getTimeUntilDeparture(flight);
     const timeUntilHtml = timeUntil ? `<div class="flight-center-info"><span class="time-until-departure">${timeUntil}</span></div>` : '<div class="flight-center-info"></div>';
 
+    // --- HOME HIGHLIGHT LOGIC ---
+    const destCode = (flight.destination?.code || '').toUpperCase();
+    
+    // Check if destination is in our pre-calculated "Home Zone"
+    const isHomeBound = state.homeNearbySet.has(destCode);
+    
+    const cardClass = isHomeBound ? 'flight-card home-bound' : 'flight-card';
+    
+    // Differentiate text: "Go Home" (exact) vs "Home Area" (nearby)
+    let badgeText = '';
+    if (isHomeBound) {
+        badgeText = (destCode === state.homeBase) ? '🏠 Go Home' : '📍 Home Area';
+    }
+    const badgeHtml = isHomeBound ? `<div class="home-badge">${badgeText}</div>` : '';
+    // -----------------------------
+
     return `
-        <div class="flight-card">
+        <div class="${cardClass}">
+            ${badgeHtml} 
             <div class="flight-header">
                 <div class="flight-id">
                     <span class="flight-number">${flight.ident}</span>
@@ -518,6 +587,3 @@ function render() {
         flightListEl.appendChild(doneEl);
     }
 }
-
-// Note: fetchFlights() is NOT called automatically anymore.
-// It is triggered by the "Start Search" button.
