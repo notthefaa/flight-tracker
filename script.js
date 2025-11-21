@@ -10,7 +10,7 @@ const state = {
     nearbyAirportCodes: new Set(), // Store codes of nearby airports
     nextPageLink: null,
     isFetchingBackground: false,
-    homeBase: localStorage.getItem('lxj_home_base') || '',
+    homeBase: '', // Always start empty (No LocalStorage)
     homeNearbySet: new Set() // Airports within 50mi of Home Base
 };
 
@@ -24,10 +24,10 @@ const airportFilter = document.getElementById('airportFilter');
 const refreshBtn = document.getElementById('refreshBtn');
 const homeBaseInput = document.getElementById('homeBaseInput');
 
-// Set initial value for home base if saved
-if (state.homeBase) {
-    homeBaseInput.value = state.homeBase;
-}
+// Ensure inputs are visually cleared on reload
+homeBaseInput.value = '';
+airportFilter.value = '';
+nearbyToggle.checked = false;
 
 // Event Listeners
 startSearchBtn.addEventListener('click', async () => {
@@ -60,7 +60,8 @@ airportFilter.addEventListener('input', (e) => {
 
 homeBaseInput.addEventListener('input', (e) => {
     state.homeBase = e.target.value.trim().toUpperCase();
-    localStorage.setItem('lxj_home_base', state.homeBase);
+    
+    // Removed: localStorage.setItem('lxj_home_base', state.homeBase);
 
     // Recalculate zone, then render
     updateHomeBaseZone().then(() => {
