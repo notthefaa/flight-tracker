@@ -394,18 +394,40 @@ function renderFlightCard(flight) {
     const aircraftInfo = flight.aircraft_type || 'Unknown';
     const aircraftHtml = `<span class="aircraft-type">${aircraftInfo}</span>`;
 
+    // --- URGENCY LOGIC ---
     const timeUntil = getTimeUntilDeparture(flight);
-    const timeUntilHtml = timeUntil ? `<div class="flight-center-info"><span class="time-until-departure">${timeUntil}</span></div>` : '<div class="flight-center-info"></div>';
+    let timeUntilHtml = '<div class="flight-center-info"></div>';
+    
+    if (timeUntil && timeUntil !== "Departed") {
+        const dep = new Date(rawDep);
+        const now = new Date();
+        const diffMins = (dep - now) / 60000;
+
+        let urgencyClass = '';
+        // < 60 mins = Red
+        // 60-120 mins = Orange
+        // 120-240 mins = Green
+        // > 240 mins = Default (Black)
+        
+        if (diffMins < 60) {
+            urgencyClass = 'urgency-high';
+        } else if (diffMins < 120) {
+            urgencyClass = 'urgency-medium';
+        } else if (diffMins < 240) {
+            urgencyClass = 'urgency-low';
+        }
+
+        timeUntilHtml = `<div class="flight-center-info"><span class="time-until-departure ${urgencyClass}">${timeUntil}</span></div>`;
+    } else if (timeUntil === "Departed") {
+         timeUntilHtml = `<div class="flight-center-info"><span class="time-until-departure" style="color: #999;">${timeUntil}</span></div>`;
+    }
+    // ---------------------
 
     // --- HOME HIGHLIGHT LOGIC ---
     const destCode = (flight.destination?.code || '').toUpperCase();
-    
-    // Check if destination is in our pre-calculated "Home Zone"
     const isHomeBound = state.homeNearbySet.has(destCode);
-    
     const cardClass = isHomeBound ? 'flight-card home-bound' : 'flight-card';
     
-    // Differentiate text: "Go Home" (exact) vs "Home Area" (nearby)
     let badgeText = '';
     if (isHomeBound) {
         badgeText = (destCode === state.homeBase) ? '🏠 Go Home' : '📍 Home Area';
