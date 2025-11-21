@@ -56,15 +56,24 @@ header h1 {
 .controls {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.5rem;
     align-items: center;
-    /* Center alignment */
+    /* Ensure everything stays centered */
+}
+
+/* NEW: Groups the two inputs together */
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
 }
 
 .search-box {
     width: 100%;
     max-width: 400px;
-    /* Limit width for centering */
 }
 
 .search-box input {
@@ -485,9 +494,9 @@ input:checked+.slider:before {
         align-items: center;
     }
 
-    .controls {
+    /* This ensures inputs go side-by-side on large screens */
+    .input-group {
         flex-direction: row;
-        justify-content: space-between;
     }
 
     .search-box {
