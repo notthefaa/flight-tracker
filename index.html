@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LXJ Flight Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="welcomePage" class="welcome-overlay">
+        <div class="welcome-content">
+            <h1>Flexjet Scheduled Flights Tracker</h1>
+            <p>This is a simple tool to help track scheduled and upcoming Flexjet flights to facilitate a more
+                comfortable go-home day. You can search by a specific point or origin airport, or toggle the nearby
+                filter to see what airports are within 50 miles of your location.</p>
+            <p>Keep in mind that this tool shows all scheduled Flexjet flights. There is no guarantee that a specific
+                flight is an empty, non-revenue leg.</p>
+            <p class="highlight-policy">To ride company metal, the leg has to be empty and the crew has to have a 1.5
+                hour turn on point of arrival.</p>
+            <p>Once you identify a potential flight, call GCC and ask if it's empty and if you can tag along. Good luck!
+            </p>
+            <button id="startSearchBtn" class="primary-btn">Start Search</button>
+        </div>
+    </div>
+
+    <div id="app" class="container" style="display: none;">
+        <header>
+            <h1>LXJ Flight Tracker</h1>
+            <div class="controls">
+                <div class="search-box">
+                    <input type="text" id="airportFilter" placeholder="Filter by Departure Airport (e.g. KTEB)">
+                </div>
+                <div class="toggle-group">
+                    <div class="toggle-container">
+                        <span>Nearby (50mi)</span>
+                        <label class="switch">
+                            <input type="checkbox" id="nearbyToggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <button id="refreshBtn" class="icon-btn" title="Refresh Data">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div id="flightList" class="flight-list">
+            <!-- Flights will be rendered here -->
+            <div class="loading">Waiting to start...</div>
+        </div>
+    </div>
+
+    <script src="airports.js"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
