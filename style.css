@@ -1,25 +1,29 @@
 :root {
-    /* Steel Theme Palette */
-    --bg-color: #F8F9FA;       /* Bootstrap Light Grey */
+    /* FBO Luxury Theme Palette */
+    --bg-color: #F9F7F2;       /* Light Cream/Beige */
     --card-bg: #FFFFFF;
-    --text-primary: #212529;   /* Dark Grey */
-    --text-secondary: #6C757D; /* Muted Grey */
+    --text-primary: #333333;   /* Dark Grey */
+    --text-secondary: #8A8A8A; /* Medium Grey */
     
-    --accent-color: #0D6EFD;   /* Bootstrap Primary Blue */
-    --accent-hover: #0B5ED7;
+    --accent-color: #C5A065;   /* Metallic Gold */
+    --accent-hover: #B08D55;
     
-    --header-bg: #343A40;      /* Dark Steel */
+    --header-bg: #231F20;      /* Rich Black/Dark Brown */
     --header-text: #FFFFFF;
     
-    --border-color: #DEE2E6;
+    --border-color: #E6E2D8;   /* Warm Beige Border */
+    
+    /* Button Colors (From "Draft Email" button) */
+    --btn-bg: #3E3128;         /* Dark Chocolate */
+    --btn-text: #C5A065;       /* Gold Text */
     
     /* Utility Colors */
-    --success-color: #198754;
-    --warning-color: #FD7E14;  /* Orange */
-    --danger-color: #DC3545;   /* Red */
+    --success-color: #4E8542;  /* Muted Green */
+    --warning-color: #D97706;  /* Muted Orange */
+    --danger-color: #B91C1C;   /* Deep Red */
     
-    --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
-    --shadow-md: 0 4px 6px rgba(0,0,0,0.08);
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 12px rgba(62, 49, 40, 0.1); /* Brown-tinted shadow */
 }
 
 * {
@@ -30,7 +34,7 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     background-color: var(--bg-color);
     color: var(--text-primary);
     line-height: 1.5;
@@ -44,7 +48,7 @@ body {
     padding: 0 1rem 4rem 1rem;
 }
 
-/* --- Sticky Header (Steel Style) --- */
+/* --- Sticky Header (FBO Style) --- */
 .app-header {
     position: sticky;
     top: 0;
@@ -53,10 +57,8 @@ body {
     color: var(--header-text);
     padding: 1rem;
     margin: 0 -1rem 1.5rem -1rem;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-    /* Sharper corners for "Steel" look */
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    border-bottom: 3px solid var(--accent-color); /* Gold bottom border */
 }
 
 .header-top {
@@ -72,25 +74,27 @@ body {
 }
 
 .app-header h1 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-bottom: 2px;
-    color: #FFFFFF; /* Pure white text */
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #FFFFFF; 
 }
 
 .header-subtitle {
-    font-size: 0.75rem;
-    color: #ADB5BD; /* Light grey text */
+    font-size: 0.7rem;
+    color: #D4D4D4; 
     font-weight: 400;
+    font-style: italic;
 }
 
 .controls {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 1rem;
 }
 
-/* Locked state for controls */
 .controls-locked {
     opacity: 0.6;
     pointer-events: none;
@@ -99,10 +103,10 @@ body {
 .input-group {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 1rem;
 }
 
-/* --- Form Inputs (The "Reference App" Style) --- */
+/* --- Form Inputs (FBO Style) --- */
 .search-box {
     width: 100%;
     position: relative;
@@ -110,30 +114,33 @@ body {
 
 .search-box input {
     width: 100%;
-    padding: 0.6rem 0.75rem;
-    border: 1px solid #CED4DA; /* Standard grey border */
-    border-radius: 4px;        /* Slightly sharper corners */
+    padding: 0.75rem 1rem;
+    border: 1px solid #D1CBC1; /* Warm Grey Border */
+    border-radius: 2px;        /* Boxy look like screenshot */
     font-size: 16px;
-    background: #FFFFFF;       /* White background */
+    background: #FFFFFF;
     color: var(--text-primary);
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    transition: border-color 0.2s;
     appearance: none;
     -webkit-appearance: none;
 }
 
+/* Italic Placeholders */
 .search-box input::placeholder {
-    color: #ADB5BD;
+    color: #9CA3AF;
+    font-style: italic;
+    font-family: serif; /* Optional: Gives it that distinctive look */
 }
 
 .search-box input:focus {
     outline: none;
-    border-color: #86B7FE;
-    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25); /* Bootstrap focus ring */
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 1px var(--accent-color);
 }
 
 .search-box input:disabled {
-    background-color: #E9ECEF;
-    opacity: 1;
+    background-color: #F5F5F5;
+    color: #999;
 }
 
 /* Toggles */
@@ -141,27 +148,28 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgba(255,255,255,0.1); /* Slight container for toggles */
-    padding: 0.5rem;
-    border-radius: 4px;
-    margin-top: 0.25rem;
+    padding: 0.5rem 0;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    margin-top: 0.5rem;
 }
 
 .toggle-container {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    font-size: 0.85rem;
-    font-weight: 500;
-    color: #FFFFFF;
+    gap: 0.75rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--accent-color); /* Gold Text for Labels */
 }
 
-/* Switch Toggle (Updated Colors) */
+/* Switch Toggle (Gold/Dark) */
 .switch {
     position: relative;
     display: inline-block;
-    width: 40px;
-    height: 22px;
+    width: 44px;
+    height: 24px;
 }
 
 .switch input {
@@ -177,40 +185,40 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #ADB5BD; /* Grey when off */
+    background-color: #555; /* Dark grey when off */
     transition: .3s;
-    border-radius: 34px;
+    border-radius: 2px; /* Boxy toggle */
 }
 
 .slider:before {
     position: absolute;
     content: "";
-    height: 16px;
-    width: 16px;
+    height: 18px;
+    width: 18px;
     left: 3px;
     bottom: 3px;
     background-color: white;
     transition: .3s;
-    border-radius: 50%;
+    border-radius: 1px;
 }
 
 input:checked+.slider {
-    background-color: var(--accent-color); /* Blue when on */
+    background-color: var(--accent-color);
 }
 
 input:checked+.slider:before {
-    transform: translateX(18px);
+    transform: translateX(20px);
 }
 
 /* Icon Button */
 .icon-btn {
     background: transparent;
     border: 1px solid rgba(255,255,255,0.3);
-    color: white;
+    color: var(--accent-color);
     cursor: pointer;
     width: 36px;
     height: 36px;
-    border-radius: 4px; /* Sharper */
+    border-radius: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -218,43 +226,45 @@ input:checked+.slider:before {
 }
 
 .icon-btn:active {
-    background: rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.1);
 }
 
-/* --- Flight Cards (Clean/White) --- */
+/* --- Flight Cards (FBO Style) --- */
 .flight-list {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 1rem;
 }
 
 .flight-card {
     background: var(--card-bg);
     border: 1px solid var(--border-color);
-    border-radius: 6px; /* Sharper cards */
-    padding: 1rem;
+    border-top: 3px solid var(--accent-color); /* Gold Top Border */
+    border-radius: 2px;
+    padding: 1rem 1.25rem;
     position: relative;
     box-shadow: var(--shadow-sm);
 }
 
-/* Home Bound Highlight - Kept subtle */
+/* Home Bound Highlight */
 .flight-card.home-bound {
-    border: 1px solid #FFC107; /* Gold Border */
-    background-color: #FFF9E6; /* Very light yellow */
+    background-color: #FFFCF5;
+    border-color: var(--accent-color);
+    box-shadow: var(--shadow-md);
 }
 
 .home-badge {
     position: absolute;
-    top: -8px;
+    top: -12px;
     right: 10px;
-    background-color: #FFC107; /* Bootstrap Warning Yellow */
-    color: #000;
+    background-color: var(--btn-bg); /* Dark Brown */
+    color: var(--accent-color);      /* Gold Text */
     font-size: 0.65rem;
     font-weight: 700;
-    padding: 2px 8px;
-    border-radius: 10px;
+    padding: 4px 10px;
+    border-radius: 2px;
     text-transform: uppercase;
-    box-shadow: var(--shadow-sm);
+    letter-spacing: 0.05em;
     z-index: 10;
 }
 
@@ -263,8 +273,8 @@ input:checked+.slider:before {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 0.75rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #EBEBEB;
 }
 
 .flight-id {
@@ -273,15 +283,18 @@ input:checked+.slider:before {
 }
 
 .flight-number {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     font-weight: 700;
     color: var(--text-primary);
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-family: 'Inter', sans-serif; /* Clean sans-serif */
+    letter-spacing: -0.02em;
 }
 
 .flight-date {
-    font-size: 0.75rem;
-    color: var(--text-secondary);
+    font-size: 0.7rem;
+    color: var(--accent-color); /* Gold Date */
+    font-weight: 600;
+    text-transform: uppercase;
 }
 
 .flight-center-info {
@@ -292,28 +305,30 @@ input:checked+.slider:before {
 .time-until-departure {
     font-size: 0.8rem;
     font-weight: 600;
-    padding: 4px 8px;
-    border-radius: 4px;
-    background: #E9ECEF;
+    padding: 4px 10px;
+    border-radius: 2px;
+    background: #F3F3F3;
     color: var(--text-primary);
+    text-transform: uppercase;
 }
 
+/* Urgency colors */
 .urgency-high {
     color: #842029;
     background: #F8D7DA;
-    border: 1px solid #F5C2C7;
+    border-left: 3px solid #B02A37;
 }
 
 .urgency-medium {
     color: #664D03;
     background: #FFF3CD;
-    border: 1px solid #FFECB5;
+    border-left: 3px solid #FFC107;
 }
 
 .urgency-low {
     color: #0F5132;
     background: #D1E7DD;
-    border: 1px solid #BADBCC;
+    border-left: 3px solid #198754;
 }
 
 /* Route */
@@ -322,7 +337,7 @@ input:checked+.slider:before {
     align-items: center;
     justify-content: space-between;
     gap: 0.5rem;
-    margin-bottom: 0.75rem;
+    margin-bottom: 1rem;
 }
 
 .location {
@@ -338,17 +353,17 @@ input:checked+.slider:before {
 }
 
 .airport-code {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: var(--text-primary);
     line-height: 1;
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 .airport-name {
     font-size: 0.7rem;
-    color: var(--text-secondary);
-    margin-top: 0.2rem;
+    color: #888;
+    margin-top: 0.25rem;
+    font-style: italic;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -356,7 +371,7 @@ input:checked+.slider:before {
 }
 
 .time-group {
-    margin-top: 0.25rem;
+    margin-top: 0.4rem;
 }
 
 .time {
@@ -370,13 +385,13 @@ input:checked+.slider:before {
 }
 
 .time.zulu {
-    color: var(--text-secondary);
+    color: #999;
     font-size: 0.7rem;
 }
 
 .plane-icon {
-    color: var(--text-secondary); /* Muted Plane */
-    font-size: 1rem;
+    color: var(--accent-color);
+    font-size: 1.2rem;
     padding: 0 0.5rem;
 }
 
@@ -386,18 +401,20 @@ input:checked+.slider:before {
     gap: 0.5rem;
     flex-wrap: wrap;
     justify-content: center;
-    border-top: 1px dashed var(--border-color);
+    border-top: 1px dashed #EBEBEB;
     padding-top: 0.75rem;
 }
 
 .aircraft-type,
 .flight-status {
     font-size: 0.7rem;
-    font-weight: 600;
-    background: #E9ECEF;
-    padding: 2px 8px;
-    border-radius: 4px;
-    color: var(--text-primary);
+    font-weight: 700;
+    background: var(--header-bg); /* Dark Brown bg */
+    color: #FFF;
+    padding: 3px 8px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 .flight-status {
@@ -410,12 +427,13 @@ input:checked+.slider:before {
 .status-bar {
     background: #FFFFFF;
     padding: 0.75rem;
-    border-radius: 6px;
+    border-radius: 2px;
     font-size: 0.8rem;
-    color: var(--text-secondary);
+    color: var(--text-primary);
     text-align: center;
     margin-bottom: 1rem;
     border: 1px solid var(--border-color);
+    border-left: 4px solid var(--accent-color);
 }
 
 .loading,
@@ -424,23 +442,26 @@ input:checked+.slider:before {
     text-align: center;
     padding: 3rem 1rem;
     color: var(--text-secondary);
+    font-style: italic;
 }
 
 .disclaimer {
     text-align: center;
-    font-size: 0.7rem;
-    color: #ADB5BD;
+    font-size: 0.65rem;
+    color: #CCC;
     margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
 }
 
-/* --- Welcome Overlay (Steel) --- */
+/* --- Welcome Overlay (FBO) --- */
 .welcome-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.8);
+    background-color: rgba(35, 31, 32, 0.95); /* Dark Brown overlay */
     z-index: 1000;
     display: flex;
     flex-direction: column;
@@ -449,19 +470,24 @@ input:checked+.slider:before {
 }
 
 .welcome-content {
-    background: #FFFFFF;
+    background: var(--bg-color);
     padding: 2rem 1.5rem;
-    border-radius: 8px;
+    border-radius: 2px;
     max-width: 600px;
     margin: auto;
     text-align: center;
-    border-top: 5px solid var(--accent-color);
+    border-top: 6px solid var(--accent-color);
+    box-shadow: 0 20px 25px rgba(0,0,0,0.5);
 }
 
 .welcome-content h1 {
-    color: var(--text-primary);
-    font-size: 1.5rem;
+    color: var(--header-bg);
+    font-size: 1.25rem;
     margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 1rem;
 }
 
 .info-grid {
@@ -472,46 +498,57 @@ input:checked+.slider:before {
 }
 
 .info-item {
-    background: #F8F9FA;
-    border: 1px solid #DEE2E6;
+    background: #FFFFFF;
+    border: 1px solid var(--border-color);
     padding: 1rem;
-    border-radius: 6px;
+    border-radius: 2px;
     font-size: 0.9rem;
 }
 
 .info-item strong {
     display: block;
     color: var(--accent-color);
+    font-size: 0.75rem;
+    text-transform: uppercase;
     margin-bottom: 0.25rem;
+    letter-spacing: 0.05em;
 }
 
+/* PRIMARY BUTTON (The "Draft Email" look) */
 .primary-btn {
-    background-color: var(--accent-color); /* Blue */
-    color: white;
+    background-color: var(--btn-bg);
+    color: var(--btn-text);
     border: none;
-    padding: 0.75rem 2rem;
+    padding: 1rem 2rem;
     font-size: 1rem;
-    font-weight: 600;
-    border-radius: 4px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border-radius: 2px;
     cursor: pointer;
     width: 100%;
     margin-top: 1rem;
-    transition: background-color 0.15s;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
 }
 
 .primary-btn:hover {
-    background-color: var(--accent-hover);
+    background-color: #2B221B; /* Slightly darker brown */
 }
 
+/* Policy Box */
 .highlight-policy {
     font-size: 0.8rem;
-    color: #664d03;
-    background-color: #fff3cd;
-    border: 1px solid #ffecb5;
+    color: #5C4B38;
+    background-color: #FFFFFF;
+    border: 1px solid #E6E2D8;
     padding: 1rem;
-    border-radius: 6px;
     margin-bottom: 1rem;
     text-align: left;
+    font-style: italic;
 }
 
 /* Loading Spinner */
@@ -538,6 +575,5 @@ input:checked+.slider:before {
     }
     .app-header {
         padding: 1.5rem;
-        border-radius: 8px;
     }
 }
