@@ -4,10 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#343A40">
+    <meta name="theme-color" content="#231F20">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>LXJ Flight Tracker</title>
+    
+    <!-- iOS Icon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="icon.png">
+    <!-- Android/Chrome Icon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="icon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="icon.png">
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="manifest.json">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -32,6 +41,9 @@
             </div>
 
             <p class="highlight-policy">Policy Reminder: To ride company metal, the leg must be empty and the crew must have a 1.5 hour turn.</p>
+            
+            <!-- NEW TEXT HERE -->
+            <p class="call-action">Once you find a potential flight, call the GCC and ask if it's live or empty. If it's empty, ask if you can ride along. Good luck!</p>
             
             <button id="startSearchBtn" class="primary-btn">Start Search</button>
         </div>
