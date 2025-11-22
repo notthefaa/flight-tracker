@@ -2,8 +2,8 @@
     /* FBO Luxury Theme Palette */
     --bg-color: #F9F7F2;       /* Light Cream/Beige */
     --card-bg: #FFFFFF;
-    --text-primary: #333333;   /* Dark Grey */
-    --text-secondary: #8A8A8A; /* Medium Grey */
+    --text-primary: #222222;   /* Darker Grey for better contrast */
+    --text-secondary: #666666; /* Darker secondary for readability */
     
     --accent-color: #C5A065;   /* Metallic Gold */
     --accent-hover: #B08D55;
@@ -13,18 +13,18 @@
     
     --border-color: #E6E2D8;   /* Warm Beige Border */
     
-    /* Button Colors (Matching "Draft Email") */
+    /* Button Colors */
     --btn-bg: #3E3128;         /* Dark Chocolate */
     --btn-text: #C5A065;       /* Gold Text */
     
     /* Utility Colors */
-    --success-color: #4E8542;  /* Muted Green */
-    --warning-color: #D97706;  /* Muted Orange */
-    --danger-color: #B91C1C;   /* Deep Red */
+    --success-color: #4E8542;
+    --warning-color: #D97706;
+    --danger-color: #B91C1C;
     
-    --radius-sm: 6px;          /* Soft rounding */
-    --radius-md: 8px;          /* Standard rounding */
-    --radius-lg: 16px;         /* Large rounding */
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 16px;
     
     --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
     --shadow-md: 0 4px 12px rgba(62, 49, 40, 0.1);
@@ -43,6 +43,7 @@ body {
     color: var(--text-primary);
     line-height: 1.5;
     min-height: 100vh;
+    font-size: 16px; /* Base size increase */
     -webkit-font-smoothing: antialiased;
 }
 
@@ -52,17 +53,17 @@ body {
     padding: 0 1rem 4rem 1rem;
 }
 
-/* --- Sticky Header (Rounded & Floating) --- */
+/* --- Sticky Header --- */
 .app-header {
     position: sticky;
     top: 0;
     z-index: 100;
     background-color: var(--header-bg);
     color: var(--header-text);
-    padding: 1rem;
+    padding: 1.25rem 1rem; /* More padding */
     margin: 0 -1rem 1.5rem -1rem;
     box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-    border-bottom: 4px solid var(--accent-color); /* Distinct Gold Line */
+    border-bottom: 4px solid var(--accent-color);
     border-bottom-left-radius: var(--radius-lg);
     border-bottom-right-radius: var(--radius-lg);
 }
@@ -71,7 +72,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 1rem;
+    margin-bottom: 1.25rem;
 }
 
 .header-titles {
@@ -80,7 +81,7 @@ body {
 }
 
 .app-header h1 {
-    font-size: 1.1rem;
+    font-size: 1.4rem; /* Larger Title */
     font-weight: 800;
     margin-bottom: 4px;
     text-transform: uppercase;
@@ -89,17 +90,17 @@ body {
 }
 
 .header-subtitle {
-    font-size: 0.7rem;
+    font-size: 0.9rem; /* Larger Subtitle */
     color: #D4D4D4; 
     font-weight: 400;
     font-style: italic;
-    font-family: serif; /* Adds that classy italic feel */
+    font-family: serif; 
 }
 
 .controls {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.25rem;
 }
 
 .controls-locked {
@@ -113,7 +114,7 @@ body {
     gap: 1rem;
 }
 
-/* --- Form Inputs (Rounded & Soft) --- */
+/* --- Form Inputs --- */
 .search-box {
     width: 100%;
     position: relative;
@@ -121,10 +122,10 @@ body {
 
 .search-box input {
     width: 100%;
-    padding: 0.85rem 1rem; /* Taller input */
+    padding: 1rem; /* Larger touch target */
     border: 1px solid #D1CBC1; 
-    border-radius: var(--radius-md); /* ROUNDED CORNERS */
-    font-size: 16px;
+    border-radius: var(--radius-md);
+    font-size: 1.1rem; /* Larger Input Text */
     background: #FFFFFF;
     color: var(--text-primary);
     transition: all 0.2s ease;
@@ -133,7 +134,6 @@ body {
     box-shadow: inset 0 1px 2px rgba(0,0,0,0.03);
 }
 
-/* Italic Placeholders */
 .search-box input::placeholder {
     color: #9CA3AF;
     font-style: italic;
@@ -143,7 +143,7 @@ body {
 .search-box input:focus {
     outline: none;
     border-color: var(--accent-color);
-    box-shadow: 0 0 0 3px rgba(197, 160, 101, 0.2); /* Gold Glow */
+    box-shadow: 0 0 0 3px rgba(197, 160, 101, 0.2);
 }
 
 .search-box input:disabled {
@@ -165,19 +165,19 @@ body {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    font-size: 0.8rem;
+    font-size: 0.95rem; /* Larger Toggle Text */
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--accent-color);
 }
 
-/* Switch Toggle (Rounded) */
+/* Switch Toggle */
 .switch {
     position: relative;
     display: inline-block;
-    width: 46px;
-    height: 26px;
+    width: 52px; /* Slightly larger switch */
+    height: 30px;
 }
 
 .switch input {
@@ -195,14 +195,14 @@ body {
     bottom: 0;
     background-color: #555;
     transition: .3s;
-    border-radius: 30px; /* Fully Rounded Pill */
+    border-radius: 30px;
 }
 
 .slider:before {
     position: absolute;
     content: "";
-    height: 20px;
-    width: 20px;
+    height: 24px; /* Larger knob */
+    width: 24px;
     left: 3px;
     bottom: 3px;
     background-color: white;
@@ -215,18 +215,18 @@ input:checked+.slider {
 }
 
 input:checked+.slider:before {
-    transform: translateX(20px);
+    transform: translateX(22px);
 }
 
-/* Icon Button (Matching Styles) */
+/* Icon Button */
 .icon-btn {
     background: transparent;
     border: 1px solid rgba(255,255,255,0.3);
     color: var(--accent-color);
     cursor: pointer;
-    width: 40px;
-    height: 40px;
-    border-radius: var(--radius-md); /* Rounded */
+    width: 44px; /* Larger button */
+    height: 44px;
+    border-radius: var(--radius-md);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -238,24 +238,23 @@ input:checked+.slider:before {
     transform: scale(0.95);
 }
 
-/* --- Flight Cards (Rounded) --- */
+/* --- Flight Cards --- */
 .flight-list {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.25rem; /* More breathing room between cards */
 }
 
 .flight-card {
     background: var(--card-bg);
     border: 1px solid var(--border-color);
-    border-top: 4px solid var(--accent-color); /* Thick Gold Top */
-    border-radius: var(--radius-md); /* ROUNDED */
-    padding: 1rem 1.25rem;
+    border-top: 5px solid var(--accent-color); /* Thicker Gold Top */
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
     position: relative;
     box-shadow: var(--shadow-sm);
 }
 
-/* Home Bound Highlight */
 .flight-card.home-bound {
     background-color: #FFFCF5;
     border-color: var(--accent-color);
@@ -264,14 +263,14 @@ input:checked+.slider:before {
 
 .home-badge {
     position: absolute;
-    top: -14px;
+    top: -16px;
     right: 12px;
-    background-color: var(--btn-bg); /* Dark Brown */
-    color: var(--accent-color);      /* Gold Text */
-    font-size: 0.65rem;
+    background-color: var(--btn-bg);
+    color: var(--accent-color);
+    font-size: 0.8rem; /* Larger Badge */
     font-weight: 700;
-    padding: 4px 12px;
-    border-radius: 20px; /* Pill Shape */
+    padding: 6px 14px;
+    border-radius: 20px;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     z-index: 10;
@@ -282,8 +281,8 @@ input:checked+.slider:before {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.75rem;
-    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
     border-bottom: 1px solid #EBEBEB;
 }
 
@@ -293,18 +292,19 @@ input:checked+.slider:before {
 }
 
 .flight-number {
-    font-size: 1.2rem;
-    font-weight: 800;
+    font-size: 1.4rem; /* Big Flight ID */
+    font-weight: 900;
     color: var(--text-primary);
     font-family: 'Inter', sans-serif;
     letter-spacing: -0.02em;
 }
 
 .flight-date {
-    font-size: 0.7rem;
+    font-size: 0.85rem; /* Readable Date */
     color: var(--accent-color);
     font-weight: 600;
     text-transform: uppercase;
+    margin-top: 2px;
 }
 
 .flight-center-info {
@@ -313,10 +313,10 @@ input:checked+.slider:before {
 }
 
 .time-until-departure {
-    font-size: 0.8rem;
-    font-weight: 600;
-    padding: 4px 10px;
-    border-radius: var(--radius-sm); /* Rounded */
+    font-size: 0.95rem; /* Readable Urgency */
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
     background: #F3F3F3;
     color: var(--text-primary);
     text-transform: uppercase;
@@ -326,19 +326,19 @@ input:checked+.slider:before {
 .urgency-high {
     color: #842029;
     background: #F8D7DA;
-    border-left: 4px solid #B02A37;
+    border-left: 5px solid #B02A37;
 }
 
 .urgency-medium {
     color: #664D03;
     background: #FFF3CD;
-    border-left: 4px solid #FFC107;
+    border-left: 5px solid #FFC107;
 }
 
 .urgency-low {
     color: #0F5132;
     background: #D1E7DD;
-    border-left: 4px solid #198754;
+    border-left: 5px solid #198754;
 }
 
 /* Route */
@@ -347,7 +347,7 @@ input:checked+.slider:before {
     align-items: center;
     justify-content: space-between;
     gap: 0.5rem;
-    margin-bottom: 1rem;
+    margin-bottom: 1.25rem;
 }
 
 .location {
@@ -363,14 +363,14 @@ input:checked+.slider:before {
 }
 
 .airport-code {
-    font-size: 1.5rem;
+    font-size: 2rem; /* HUGE Airport Codes */
     font-weight: 800;
     color: var(--text-primary);
     line-height: 1;
 }
 
 .airport-name {
-    font-size: 0.7rem;
+    font-size: 0.85rem; /* Readable Name */
     color: #888;
     margin-top: 0.25rem;
     font-style: italic;
@@ -381,67 +381,67 @@ input:checked+.slider:before {
 }
 
 .time-group {
-    margin-top: 0.4rem;
+    margin-top: 0.5rem;
 }
 
 .time {
-    font-size: 0.75rem;
+    font-size: 1rem; /* Readable Time (16px) */
     font-variant-numeric: tabular-nums;
 }
 
 .time.local {
     color: var(--text-primary);
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .time.zulu {
     color: #999;
-    font-size: 0.7rem;
+    font-size: 0.85rem; /* Readable Zulu */
 }
 
 .plane-icon {
     color: var(--accent-color);
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     padding: 0 0.5rem;
 }
 
 /* Footer */
 .flight-meta {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.75rem;
     flex-wrap: wrap;
     justify-content: center;
     border-top: 1px dashed #EBEBEB;
-    padding-top: 0.75rem;
+    padding-top: 1rem;
 }
 
 .aircraft-type,
 .flight-status {
-    font-size: 0.7rem;
+    font-size: 0.85rem; /* Readable Tags */
     font-weight: 700;
     background: var(--header-bg);
     color: #FFF;
-    padding: 4px 10px;
-    border-radius: var(--radius-sm); /* Rounded */
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
 
 .flight-status {
     background: transparent;
-    border: 1px solid var(--success-color);
+    border: 2px solid var(--success-color);
     color: var(--success-color);
 }
 
 /* --- Status Bar --- */
 .status-bar {
     background: #FFFFFF;
-    padding: 0.75rem;
+    padding: 1rem;
     border-radius: var(--radius-md);
-    font-size: 0.8rem;
+    font-size: 0.95rem;
     color: var(--text-primary);
     text-align: center;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
     border: 1px solid var(--border-color);
     border-left: 4px solid var(--accent-color);
 }
@@ -453,25 +453,26 @@ input:checked+.slider:before {
     padding: 3rem 1rem;
     color: var(--text-secondary);
     font-style: italic;
+    font-size: 1.1rem;
 }
 
 .disclaimer {
     text-align: center;
-    font-size: 0.65rem;
+    font-size: 0.8rem;
     color: #CCC;
     margin-bottom: 1.5rem;
     text-transform: uppercase;
     letter-spacing: 0.1em;
 }
 
-/* --- Welcome Overlay (FBO) --- */
+/* --- Welcome Overlay --- */
 .welcome-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(35, 31, 32, 0.95); /* Dark Brown overlay */
+    background-color: rgba(35, 31, 32, 0.95);
     z-index: 1000;
     display: flex;
     flex-direction: column;
@@ -482,7 +483,7 @@ input:checked+.slider:before {
 .welcome-content {
     background: var(--bg-color);
     padding: 2rem 1.5rem;
-    border-radius: var(--radius-md); /* Rounded */
+    border-radius: var(--radius-md);
     max-width: 600px;
     margin: auto;
     text-align: center;
@@ -492,7 +493,7 @@ input:checked+.slider:before {
 
 .welcome-content h1 {
     color: var(--header-bg);
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     margin-bottom: 1rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -510,31 +511,31 @@ input:checked+.slider:before {
 .info-item {
     background: #FFFFFF;
     border: 1px solid var(--border-color);
-    padding: 1rem;
+    padding: 1.25rem;
     border-radius: var(--radius-md);
-    font-size: 0.9rem;
+    font-size: 1rem;
 }
 
 .info-item strong {
     display: block;
     color: var(--accent-color);
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     text-transform: uppercase;
     margin-bottom: 0.25rem;
     letter-spacing: 0.05em;
 }
 
-/* PRIMARY BUTTON (Matching "Draft Email") */
+/* PRIMARY BUTTON */
 .primary-btn {
     background-color: var(--btn-bg);
     color: var(--btn-text);
     border: none;
-    padding: 1rem 2rem;
-    font-size: 1rem;
+    padding: 1.1rem 2rem;
+    font-size: 1.1rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    border-radius: var(--radius-md); /* Rounded */
+    border-radius: var(--radius-md);
     cursor: pointer;
     width: 100%;
     margin-top: 1rem;
@@ -552,11 +553,11 @@ input:checked+.slider:before {
 
 /* Policy Box */
 .highlight-policy {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     color: #5C4B38;
     background-color: #FFFFFF;
     border: 1px solid #E6E2D8;
-    padding: 1rem;
+    padding: 1.25rem;
     border-radius: var(--radius-md);
     margin-bottom: 1rem;
     text-align: left;
@@ -565,9 +566,9 @@ input:checked+.slider:before {
 
 /* Loading Spinner */
 .spinner {
-    width: 20px;
-    height: 20px;
-    border: 2px solid rgba(0, 0, 0, 0.1);
+    width: 24px;
+    height: 24px;
+    border: 3px solid rgba(0, 0, 0, 0.1);
     border-left-color: var(--accent-color);
     border-radius: 50%;
     animation: spin 1s linear infinite;
