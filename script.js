@@ -1,18 +1,18 @@
 // State
 const state = {
     flights: [],
-    allFetchedFlights: [], // Store ALL fetched flights here
+    allFetchedFlights: [], 
     loading: false,
     error: null,
     filterOrigin: '',
     filterNearby: false,
-    filterHomeOnly: false, // NEW: Filter to show only flights going home
+    filterHomeOnly: false,
     userLocation: null,
-    nearbyAirportCodes: new Set(), // Store codes of nearby airports
+    nearbyAirportCodes: new Set(), 
     nextPageLink: null,
     isFetchingBackground: false,
-    homeBase: '', // Always start empty
-    homeNearbySet: new Set() // Airports within 50mi of Home Base
+    homeBase: '', 
+    homeNearbySet: new Set() 
 };
 
 // DOM Elements
@@ -21,7 +21,7 @@ const app = document.getElementById('app');
 const startSearchBtn = document.getElementById('startSearchBtn');
 const flightListEl = document.getElementById('flightList');
 const nearbyToggle = document.getElementById('nearbyToggle');
-const homeOnlyToggle = document.getElementById('homeOnlyToggle'); // NEW
+const homeOnlyToggle = document.getElementById('homeOnlyToggle');
 const airportFilter = document.getElementById('airportFilter');
 const refreshBtn = document.getElementById('refreshBtn');
 const homeBaseInput = document.getElementById('homeBaseInput');
@@ -53,11 +53,10 @@ nearbyToggle.addEventListener('change', async (e) => {
     }
 });
 
-// NEW: Home Only Toggle Listener
 homeOnlyToggle.addEventListener('change', (e) => {
     if (e.target.checked && !state.homeBase) {
         alert("Please enter a Home Base airport code first (e.g. KDAL).");
-        e.target.checked = false; // Reset the switch if no home base set
+        e.target.checked = false; 
         return;
     }
     state.filterHomeOnly = e.target.checked;
@@ -72,7 +71,6 @@ airportFilter.addEventListener('input', (e) => {
 homeBaseInput.addEventListener('input', (e) => {
     state.homeBase = e.target.value.trim().toUpperCase();
     updateHomeBaseZone().then(() => {
-        // If the user clears the box, turn off the "Home Only" filter
         if (!state.homeBase && state.filterHomeOnly) {
             state.filterHomeOnly = false;
             homeOnlyToggle.checked = false;
@@ -84,15 +82,21 @@ homeBaseInput.addEventListener('input', (e) => {
 // Helpers
 function setControlsDisabled(disabled) {
     airportFilter.disabled = disabled;
+    homeBaseInput.disabled = disabled;
     nearbyToggle.disabled = disabled;
+    homeOnlyToggle.disabled = disabled;
     refreshBtn.disabled = disabled;
 
     if (disabled) {
-        airportFilter.placeholder = "Loading...";
         app.classList.add('controls-locked');
+        if(airportFilter.placeholder.indexOf("Loading") === -1) {
+             airportFilter.setAttribute('data-prev-placeholder', airportFilter.placeholder);
+             airportFilter.placeholder = "Loading data...";
+        }
     } else {
-        airportFilter.placeholder = "Filter Departure (e.g. KTEB)";
         app.classList.remove('controls-locked');
+        const prev = airportFilter.getAttribute('data-prev-placeholder');
+        if(prev) airportFilter.placeholder = prev;
     }
 }
 
@@ -230,12 +234,29 @@ async function findNearbyAirportsFromCSV(lat, lon) {
 
 async function updateHomeBaseZone() {
     state.homeNearbySet.clear();
-    const homeCode = state.homeBase.trim().toUpperCase();
+    let homeCode = state.homeBase.trim().toUpperCase();
     if (!homeCode) return;
 
     await loadAirportData();
-    const homeAirport = airportData.find(a => a.code === homeCode);
-    if (!homeAirport) return;
+    
+    // Try exact match
+    let homeAirport = airportData.find(a => a.code === homeCode);
+    
+    // Smart Fallback: If user types "DAL" but CSV has "KDAL"
+    if (!homeAirport && homeCode.length === 3) {
+         const kCode = "K" + homeCode;
+         homeAirport = airportData.find(a => a.code === kCode);
+         if (homeAirport) {
+             console.log(`Found home airport using fallback: ${kCode}`);
+             // Optionally update state to matches
+             // state.homeBase = kCode; 
+         }
+    }
+
+    if (!homeAirport) {
+        console.warn("Home airport not found in DB.");
+        return;
+    }
 
     const RADIUS = 50;
     for (const airport of airportData) {
@@ -243,6 +264,7 @@ async function updateHomeBaseZone() {
             state.homeNearbySet.add(airport.code);
         }
     }
+    console.log(`Home Zone calculated: ${state.homeNearbySet.size} airports.`);
 }
 
 // Fetch Flights
@@ -253,7 +275,7 @@ async function fetchFlights(isBackground = false) {
         state.allFetchedFlights = [];
         state.nextPageLink = null;
         state.isFetchingBackground = false;
-        setControlsDisabled(true);
+        setControlsDisabled(true); // Locks EVERYTHING
         render();
     } else {
         state.isFetchingBackground = true;
@@ -318,7 +340,7 @@ async function fetchFlights(isBackground = false) {
         }
     } finally {
         if (!isBackground) state.loading = false;
-        if (!state.nextPageLink || state.error) setControlsDisabled(false);
+        if (!isBackground) setControlsDisabled(false);
         render();
     }
 }
@@ -382,14 +404,16 @@ function renderFlightCard(flight) {
     return `
         <div class="${cardClass}">
             ${badgeHtml} 
-            ${timeUntilHtml}
+            
             <div class="flight-header">
                 <div class="flight-id">
                     <span class="flight-number">${flight.ident}</span>
                     <span class="flight-date">${date}</span>
                 </div>
-                <!-- Desktop time placeholder -->
+                <!-- Time Aligned Right -->
+                ${timeUntilHtml}
             </div>
+            
             <div class="route">
                 <div class="location">
                     <span class="airport-code">${flight.origin?.code || '---'}</span>
@@ -409,6 +433,7 @@ function renderFlightCard(flight) {
                     </div>
                 </div>
             </div>
+            <!-- Centered Footer Meta -->
             <div class="flight-meta">
                 ${aircraftHtml}
                 <span class="flight-status">${flight.status || 'Scheduled'}</span>
@@ -442,10 +467,10 @@ function applyFilters() {
             return false;
         }
 
-        // 3. NEW: Filter by Home Only (Destination)
+        // 3. Filter by Home Only (Destination)
         if (state.filterHomeOnly) {
             const destCode = (f.destination?.code || '').toUpperCase();
-            // Must be in the set of airports within 50mi of home base
+            // Check exact match with Home Set
             if (!state.homeNearbySet.has(destCode)) return false;
         }
 
