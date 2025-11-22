@@ -1,29 +1,18 @@
-// Configuration for Fleet Profiles
-// Focusing strictly on E55P and Challenger fleets for "Live" vs "Repo" detection.
-const FLEET_PROFILES = {
-    // Phenom 300: Live ~M0.74 | Repo ~M0.70
-    'E55P': { name: 'Phenom 300', typical_mach: 0.74, min_mach: 0.72 }, 
-    
-    // Challenger 300/350: Live ~M0.80 | Repo ~M0.78
-    'CL30': { name: 'Challenger 300', typical_mach: 0.80, min_mach: 0.79 },
-    'CL35': { name: 'Challenger 350', typical_mach: 0.80, min_mach: 0.79 }
-};
-
 // State
 const state = {
     flights: [],
-    allFetchedFlights: [],
+    allFetchedFlights: [], 
     loading: false,
     error: null,
     filterOrigin: '',
     filterNearby: false,
     filterHomeOnly: false,
     userLocation: null,
-    nearbyAirportCodes: new Set(),
+    nearbyAirportCodes: new Set(), 
     nextPageLink: null,
     isFetchingBackground: false,
-    homeBase: '',
-    homeNearbySet: new Set()
+    homeBase: '', 
+    homeNearbySet: new Set() 
 };
 
 // DOM Elements
@@ -67,7 +56,7 @@ nearbyToggle.addEventListener('change', async (e) => {
 homeOnlyToggle.addEventListener('change', (e) => {
     if (e.target.checked && !state.homeBase) {
         alert("Please enter a Home Base airport code first (e.g. KDAL).");
-        e.target.checked = false;
+        e.target.checked = false; 
         return;
     }
     state.filterHomeOnly = e.target.checked;
@@ -162,72 +151,6 @@ function formatDate(isoString, timeZone) {
     }
 }
 
-// --- PHYSICS & FLEET LOGIC ---
-
-/**
- * Calculates Mach number based on Filed Speed (MPH) and Altitude.
- * Uses International Standard Atmosphere (ISA) model.
- * 
- * @param {number} filedSpeedMph - Filed Speed in MPH
- * @param {number} altitudeFeet - Filed Altitude in Feet
- * @returns {string} Mach number formatted to 2 decimals (e.g., "0.85")
- */
-function calculateMach(filedSpeedMph, altitudeFeet) {
-    if (!filedSpeedMph || !altitudeFeet) return null;
-
-    // 1. Convert MPH to Knots (True Airspeed)
-    const trueAirspeedKnots = filedSpeedMph * 0.868976;
-
-    // 2. Calculate Standard Temperature (Kelvin) at Altitude
-    // Troposphere (< 36,089 ft): Temp drops linearly
-    // Stratosphere (> 36,089 ft): Temp is constant (Isothermal -56.5C)
-    let stdTempKelvin;
-    if (altitudeFeet <= 36089) {
-        stdTempKelvin = 288.15 - (0.0019812 * altitudeFeet);
-    } else {
-        stdTempKelvin = 216.65;
-    }
-
-    // 3. Calculate Speed of Sound (Knots) in Standard Atmosphere
-    // Formula: a = 38.967854 * sqrt(T_kelvin)
-    const speedOfSoundKnots = 38.967854 * Math.sqrt(stdTempKelvin);
-
-    // 4. Calculate Mach
-    const mach = trueAirspeedKnots / speedOfSoundKnots;
-    return mach.toFixed(2);
-}
-
-/**
- * Analyzes flight plan against fleet profiles to guess intent.
- * @param {string} aircraftType - ICAO code (e.g., E55P)
- * @param {number} mach - Calculated Mach number
- * @returns {object} { label: string, colorClass: string }
- */
-function analyzeFlightType(aircraftType, mach) {
-    const profile = FLEET_PROFILES[aircraftType];
-    
-    // If not E55P or Challenger, just return empty (don't guess)
-    if (!profile || !mach) {
-        return { label: '', colorClass: '' }; 
-    }
-
-    const m = parseFloat(mach);
-
-    // Logic:
-    // High speed (>= typical) = Live Leg (Time is money)
-    // Low speed (< min) = Possible Repo (Fuel is money)
-    
-    if (m >= profile.typical_mach) {
-        return { label: '🚀 Live Leg', colorClass: 'flight-status' }; 
-    } else if (m < profile.min_mach) {
-        return { label: '🐢 Possible Repo', colorClass: 'aircraft-type' }; 
-    } else {
-        return { label: 'Normal Cruise', colorClass: 'flight-status' };
-    }
-}
-
-// --- DATA LOADING ---
-
 // Geolocation and Nearby Airports
 async function handleNearbyToggle() {
     if (!navigator.geolocation) {
@@ -264,6 +187,7 @@ async function handleNearbyToggle() {
     }
 }
 
+// Load Data
 let airportData = [];
 
 async function loadAirportData() {
@@ -322,6 +246,11 @@ async function updateHomeBaseZone() {
     if (!homeAirport && homeCode.length === 3) {
          const kCode = "K" + homeCode;
          homeAirport = airportData.find(a => a.code === kCode);
+         if (homeAirport) {
+             console.log(`Found home airport using fallback: ${kCode}`);
+             // Optionally update state to matches
+             // state.homeBase = kCode; 
+         }
     }
 
     if (!homeAirport) {
@@ -335,6 +264,7 @@ async function updateHomeBaseZone() {
             state.homeNearbySet.add(airport.code);
         }
     }
+    console.log(`Home Zone calculated: ${state.homeNearbySet.size} airports.`);
 }
 
 // Fetch Flights
@@ -345,7 +275,7 @@ async function fetchFlights(isBackground = false) {
         state.allFetchedFlights = [];
         state.nextPageLink = null;
         state.isFetchingBackground = false;
-        setControlsDisabled(true);
+        setControlsDisabled(true); // Locks EVERYTHING
         render();
     } else {
         state.isFetchingBackground = true;
@@ -441,30 +371,8 @@ function renderFlightCard(flight) {
     const depTimes = formatTime(rawDep, originTz);
     const arrTimes = formatTime(rawArr, destTz);
     const date = formatDate(rawDep, originTz);
-    
-    const aircraftType = flight.aircraft_type || 'Unknown';
-    
-    // Retrieve Filed Data (MPH and Feet)
-    const filedSpeedMph = flight.filed_airspeed || 0; 
-    const filedAltFeet = (flight.filed_altitude || 0) * 100; 
-
-    // --- Calculations ---
-    const mach = calculateMach(filedSpeedMph, filedAltFeet);
-    const flightAnalysis = analyzeFlightType(aircraftType, mach);
-
-    // Construct Meta Info HTML
-    let metaHtml = `<span class="aircraft-type">${aircraftType}</span>`;
-    
-    // Only show physics data if we have it
-    if (mach && filedAltFeet > 0) {
-        metaHtml += `<span class="aircraft-type">M${mach}</span>`;
-        
-        if (flightAnalysis.label) {
-            metaHtml += `<span class="${flightAnalysis.colorClass}">${flightAnalysis.label}</span>`;
-        }
-    }
-    
-    metaHtml += `<span class="flight-status">${flight.status || 'Scheduled'}</span>`;
+    const aircraftInfo = flight.aircraft_type || 'Unknown';
+    const aircraftHtml = `<span class="aircraft-type">${aircraftInfo}</span>`;
 
     // Urgency
     const timeUntil = getTimeUntilDeparture(flight);
@@ -496,11 +404,13 @@ function renderFlightCard(flight) {
     return `
         <div class="${cardClass}">
             ${badgeHtml} 
+            
             <div class="flight-header">
                 <div class="flight-id">
                     <span class="flight-number">${flight.ident}</span>
                     <span class="flight-date">${date}</span>
                 </div>
+                <!-- Time Aligned Right -->
                 ${timeUntilHtml}
             </div>
             
@@ -523,9 +433,10 @@ function renderFlightCard(flight) {
                     </div>
                 </div>
             </div>
-            
+            <!-- Centered Footer Meta -->
             <div class="flight-meta">
-                ${metaHtml}
+                ${aircraftHtml}
+                <span class="flight-status">${flight.status || 'Scheduled'}</span>
             </div>
         </div>
     `;
@@ -539,6 +450,7 @@ function applyFilters() {
         if (!depTime) return false;
         if (new Date(depTime) <= now) return false;
 
+        // 1. Filter by Departure (Origin)
         if (state.filterOrigin && state.filterOrigin.trim() !== '') {
             const filter = state.filterOrigin.trim().toUpperCase();
             const originCode = (f.origin?.code || f.origin || '').toUpperCase();
@@ -546,6 +458,7 @@ function applyFilters() {
             if (!originCode.includes(filter) && !originCity.includes(filter)) return false;
         }
 
+        // 2. Filter by Nearby (Origin)
         if (state.filterNearby && state.nearbyAirportCodes.size > 0) {
             const originCode = f.origin?.code || f.origin;
             const codeToCheck = (typeof originCode === 'string' ? originCode : originCode?.code || '').toUpperCase();
@@ -554,8 +467,10 @@ function applyFilters() {
             return false;
         }
 
+        // 3. Filter by Home Only (Destination)
         if (state.filterHomeOnly) {
             const destCode = (f.destination?.code || '').toUpperCase();
+            // Check exact match with Home Set
             if (!state.homeNearbySet.has(destCode)) return false;
         }
 
@@ -617,3 +532,4 @@ function render() {
         flightListEl.appendChild(doneEl);
     }
 }
+
