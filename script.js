@@ -6,6 +6,7 @@ const state = {
     error: null,
     filterOrigin: '',
     filterNearby: false,
+    filterHomeOnly: false, // NEW: Filter to show only flights going home
     userLocation: null,
     nearbyAirportCodes: new Set(), // Store codes of nearby airports
     nextPageLink: null,
@@ -20,14 +21,16 @@ const app = document.getElementById('app');
 const startSearchBtn = document.getElementById('startSearchBtn');
 const flightListEl = document.getElementById('flightList');
 const nearbyToggle = document.getElementById('nearbyToggle');
+const homeOnlyToggle = document.getElementById('homeOnlyToggle'); // NEW
 const airportFilter = document.getElementById('airportFilter');
 const refreshBtn = document.getElementById('refreshBtn');
 const homeBaseInput = document.getElementById('homeBaseInput');
 
-// Ensure inputs are cleared on reload
+// Ensure inputs/toggles are cleared on reload
 homeBaseInput.value = '';
 airportFilter.value = '';
 nearbyToggle.checked = false;
+homeOnlyToggle.checked = false;
 
 // Event Listeners
 startSearchBtn.addEventListener('click', async () => {
@@ -50,6 +53,17 @@ nearbyToggle.addEventListener('change', async (e) => {
     }
 });
 
+// NEW: Home Only Toggle Listener
+homeOnlyToggle.addEventListener('change', (e) => {
+    if (e.target.checked && !state.homeBase) {
+        alert("Please enter a Home Base airport code first (e.g. KDAL).");
+        e.target.checked = false; // Reset the switch if no home base set
+        return;
+    }
+    state.filterHomeOnly = e.target.checked;
+    render();
+});
+
 airportFilter.addEventListener('input', (e) => {
     state.filterOrigin = e.target.value;
     render();
@@ -58,6 +72,11 @@ airportFilter.addEventListener('input', (e) => {
 homeBaseInput.addEventListener('input', (e) => {
     state.homeBase = e.target.value.trim().toUpperCase();
     updateHomeBaseZone().then(() => {
+        // If the user clears the box, turn off the "Home Only" filter
+        if (!state.homeBase && state.filterHomeOnly) {
+            state.filterHomeOnly = false;
+            homeOnlyToggle.checked = false;
+        }
         render();
     });
 });
@@ -405,12 +424,16 @@ function applyFilters() {
         const depTime = getDepartureTime(f);
         if (!depTime) return false;
         if (new Date(depTime) <= now) return false;
+
+        // 1. Filter by Departure (Origin)
         if (state.filterOrigin && state.filterOrigin.trim() !== '') {
             const filter = state.filterOrigin.trim().toUpperCase();
             const originCode = (f.origin?.code || f.origin || '').toUpperCase();
             const originCity = (f.origin?.city || '').toUpperCase();
             if (!originCode.includes(filter) && !originCity.includes(filter)) return false;
         }
+
+        // 2. Filter by Nearby (Origin)
         if (state.filterNearby && state.nearbyAirportCodes.size > 0) {
             const originCode = f.origin?.code || f.origin;
             const codeToCheck = (typeof originCode === 'string' ? originCode : originCode?.code || '').toUpperCase();
@@ -418,6 +441,14 @@ function applyFilters() {
         } else if (state.filterNearby && state.nearbyAirportCodes.size === 0) {
             return false;
         }
+
+        // 3. NEW: Filter by Home Only (Destination)
+        if (state.filterHomeOnly) {
+            const destCode = (f.destination?.code || '').toUpperCase();
+            // Must be in the set of airports within 50mi of home base
+            if (!state.homeNearbySet.has(destCode)) return false;
+        }
+
         return true;
     });
     filtered.sort((a, b) => {
@@ -450,7 +481,11 @@ function render() {
              flightListEl.innerHTML = `<div class="loading"><span class="spinner"></span><br>Loading schedule...</div>`;
              return;
         }
-        flightListEl.innerHTML = `${debugHtml}<div class="empty">No upcoming flights found.</div>`;
+        
+        let msg = "No upcoming flights found.";
+        if (state.filterHomeOnly) msg = "No flights found going to your Home Base.";
+        
+        flightListEl.innerHTML = `${debugHtml}<div class="empty">${msg}</div>`;
         return;
     }
 
