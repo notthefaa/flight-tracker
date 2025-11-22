@@ -57,10 +57,28 @@ body {
 .header-top {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start; /* Aligns button to top since text is taller now */
     margin-bottom: 1rem;
 }
 
+.header-titles {
+    display: flex;
+    flex-direction: column;
+}
+
+.app-header h1 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--accent-color);
+    margin-bottom: 2px; /* Tight spacing */
+}
+
+.header-subtitle {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 400;
+}
 .app-header h1 {
     font-size: 1.25rem;
     font-weight: 700;
@@ -547,3 +565,4 @@ input:disabled + .slider:before {
         border-radius: 16px;
     }
 }
+
